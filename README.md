@@ -1,0 +1,6 @@
+# D2-Django-ORM
+
+# 1. Запуск shell 
+...
+python3 manage.py shell
+...
