@@ -4,6 +4,8 @@ from django.db.models import Sum
 # Create your models here.
 
 # модель Author
+
+
 class Author(models.Model):
     # Имеет следующие поля:
     # связь «один к одному» с встроенной моделью пользователей User
@@ -21,7 +23,8 @@ class Author(models.Model):
         pRat += postRat.get('post_rating')
 
         # суммарный рейтинг всех комментариев автора
-        commentRat = self.authors_link_user.comment_set.all().aggregate(comment_rating=Sum('rating'))
+        commentRat = self.authors_link_user.comment_set.all(
+        ).aggregate(comment_rating=Sum('rating'))
         cRat = 0
         cRat += commentRat.get('comment_rating')
 
@@ -58,10 +61,12 @@ class Post(models.Model):
                                     default=news)
 
     # автоматически добавляемая дата и время создания
-    post_data = models.DateTimeField(auto_now_add=True) # дата создания объекта
+    post_data = models.DateTimeField(
+        auto_now_add=True)  # дата создания объекта
 
     # связь «многие ко многим» с моделью Category (с дополнительной моделью PostCategory через through)
-    post_link_category = models.ManyToManyField(Category, through='PostCategory')
+    post_link_category = models.ManyToManyField(
+        Category, through='PostCategory')
 
     # заголовок статьи/новости
     title = models.CharField(max_length=40)
@@ -98,6 +103,8 @@ class PostCategory(models.Model):
     postc_link_category = models.ForeignKey(Category, on_delete=models.CASCADE)
 
 # модель Comment
+
+
 class Comment(models.Model):
     # Модель будет иметь следующие поля:
     # связь «один ко многим» с моделью Post
