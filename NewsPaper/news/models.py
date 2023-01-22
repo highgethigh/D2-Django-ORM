@@ -15,6 +15,7 @@ class Author(models.Model):
     # метод update_rating,
     # который обновляет рейтинг пользователя, переданный в аргумент этого метода.
     def update_rating(self):
+        # суммарный рейтинг всех комментариев к статьям автора
         postRat = self.post_set.all().aggregate(post_rating=Sum('rating'))
         pRat = 0
         pRat += postRat.get('post_rating')
@@ -24,6 +25,7 @@ class Author(models.Model):
         cRat = 0
         cRat += commentRat.get('comment_rating')
 
+        # суммарный рейтинг каждой статьи автора умножается на 3
         self.author_rating = pRat * 3 + cRat
         self.save()
 
