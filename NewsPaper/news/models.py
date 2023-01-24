@@ -23,8 +23,7 @@ class Author(models.Model):
         pRat += postRat.get('post_rating')
 
         # суммарный рейтинг всех комментариев автора
-        commentRat = self.authors_link_user.comment_set.all(
-        ).aggregate(comment_rating=Sum('rating'))
+        commentRat = self.authors_link_user.comment_set.all().aggregate(comment_rating=Sum('rating'))
         cRat = 0
         cRat += commentRat.get('comment_rating')
 
@@ -36,9 +35,7 @@ class Author(models.Model):
 # модель Category
 class Category(models.Model):
     # название категории новостей/статей их главная тематика
-    name_category = models.CharField(max_length=55,
-                                     # уникальное поле
-                                     unique=True)
+    name_category = models.CharField(max_length=55, unique=True)
 
 
 # модель Post
@@ -61,12 +58,10 @@ class Post(models.Model):
                                     default=news)
 
     # автоматически добавляемая дата и время создания
-    post_data = models.DateTimeField(
-        auto_now_add=True)  # дата создания объекта
+    post_data = models.DateTimeField(auto_now_add=True)  # дата создания объекта
 
     # связь «многие ко многим» с моделью Category (с дополнительной моделью PostCategory через through)
-    post_link_category = models.ManyToManyField(
-        Category, through='PostCategory')
+    post_link_category = models.ManyToManyField(Category, through='PostCategory')
 
     # заголовок статьи/новости
     title = models.CharField(max_length=40)
@@ -75,16 +70,16 @@ class Post(models.Model):
     text = models.TextField()
 
     # рейтинг статьи/новости
-    post_rating = models.FloatField(default=0)
+    rating = models.FloatField(default=0)
 
     # метод like увеличивает рейтинг статьи/новости на единицу
     def like(self):
-        self.post_rating += 1
+        self.rating += 1
         self.save()
 
     # метод dislike уменьшает рейтинг статьи/новости на единицу
     def dislike(self):
-        self.post_rating -= 1
+        self.rating -= 1
         self.save()
 
     # метод preview, который возвращает начало статьи
@@ -118,17 +113,17 @@ class Comment(models.Model):
     text_comment = models.TextField()
 
     # дата и время создания комментария
-    create_data_comment = models.DateTimeField()
+    create_data_comment = models.DateTimeField(auto_now_add=True)
 
     # рейтинг комментария
-    comment_rating = models.FloatField(max_length=20, default=0)
+    rating = models.FloatField(max_length=20, default=0)
 
     # метод like увеличивает рейтинг комментария на единицу
     def like(self):
-        self.comment_rating += 1
+        self.rating += 1
         self.save()
 
     # метод dislike уменьшает рейтинг комментария на единицу
     def dislike(self):
-        self.comment_rating -= 1
+        self.rating -= 1
         self.save()
